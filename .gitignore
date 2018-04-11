@@ -1,0 +1,7 @@
+*.pyc
+dist
+build
+top.egg-info
+__pycache__
+.idea/
+*.html
