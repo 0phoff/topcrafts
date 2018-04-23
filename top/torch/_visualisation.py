@@ -3,8 +3,8 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
+__all__ = ['show_tensor', 'show_tensor_freq', 'show_weights']
 
-__all__ = ['show_tensor', 'show_weights']
 
 def show_tensor(tensor, ax=plt):
     """ Show a tensor in a matplotlib window.
@@ -31,8 +31,38 @@ def show_tensor(tensor, ax=plt):
 
     ax.imshow(tensor, cmap='gray')
 
-def show_weights(weights, normalize=False):
-    """ Visualize the weights of a layer
+
+def show_tensor_freq(tensor, dim=None, bins=None, ax=plt, **kwargs):
+    """ Plot the frequencies of a tensor in a matplotlib histogram chart.
+
+    Args:
+        tensor (torch.Tensor): Tensor to analyze
+        dim (int, optional): Dimension to compare the tensor on; Default **Don't compare, but rather plot hist of all values**
+        bins (optional): bins for the histogram. This value gets passed on to :func:`matplotlib.pyplot.hist`; Default **None**
+        ax (matlpotlib.axes.Axes, optional): Axes to plot the histogram in; Default **matplotlib.pyplot**
+        kwargs (optional): Extra arguments to pass on to the :func:`matplotlib.pyplot.hist` funciotn; Default **None**
+
+    Returns:
+        (tuple): Return values from the :func:`matplotlib.pyplot.hist` function.
+    """
+    if dim is not None and dim >= tensor.dim():
+        raise ValueError('dim variable is bigger than the number of dimensions of the tensor [{dim}/{tensor.dim()}]')
+
+    if dim is not None:
+        size = tensor.size(dim)
+        if dim != tensor.dim()-1:
+            tensor = tensor.transpose(tensor.dim()-1, dim).contiguous()
+        tensor = tensor.view(-1, size).cpu().numpy()
+        label = [f'c{n}' for n in range(size)]
+    else:
+        tensor = tensor.view(-1).cpu().numpy()
+        label = 'tensor'
+
+    return ax.hist(tensor, bins, label=label, **kwargs)
+
+
+def show_weights(weights, normalize=False, orientation='portrait'):
+    """ Visualize the weights of a layer in a matplotlib plot
 
     Args:
         weights (torch.Tensor): Tensor containing the weights you want to visualize
