@@ -25,5 +25,11 @@ setup.setup(name='top',
             description='TOP crafts: Bits and bops that I often need and dont want to rewrite',
             long_description=open('README.md').read(),
             packages=find_packages(),
-            scripts=find_scripts()
+            scripts=find_scripts(),
+            install_requires=[
+                'numpy',
+                'scipy',
+                'Pillow',
+                'matplotlib',
+            ],
 )
