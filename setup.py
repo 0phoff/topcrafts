@@ -29,7 +29,6 @@ setup.setup(name='top',
             install_requires=[
                 'numpy',
                 'scipy',
-                'Pillow',
                 'matplotlib',
             ],
 )
