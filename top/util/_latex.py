@@ -7,17 +7,31 @@ __all__ = ['mpl_latex', 'mpl_latex_axes', 'latex_table']
 log = logging.getLogger(__name__)
 
 
-def mpl_latex(fig_width=None, fig_height=None, columns=1):
+def mpl_latex(fig_width=None, fig_height=None, ratio=None, columns=1):
     """ Set up matplotlib's RC params for LaTeX publication ready plots.
     Code stolen and adapted from: https://nipunbatra.github.io/blog/2014/latexify.html
 
     Args:
-        fig_width (float, optional): Figure width in inches
-        fig_height (float, optional): Figure height in inches
-        columns ({1,2}, optional): Whether the image is to be used in 1 or 2 columns (when no dims are given)
+        fig_width (float, optional): Figure width in inches; Default **3.39 if columns == 1 else 6.9 inches**
+        fig_height (float, optional): Figure height in inches; Default **width x ratio**
+        ratio (float, optional): height / width ratio; Default **golden_ratio**
+        columns ({1,2}, optional): Whether the image is to be used in 1 or 2 columns (when no dims are given); Default **1**
 
     Note:
         Use ``plt.savefig()`` in stead of ``plt.show()`` after using this figure!
+
+    Note:
+        The figure size gets computed in different ways, depending on the given parameters.
+
+        *Width:*
+            - ``fig_width`` is given: Use ``fig_width``
+            - ``columns`` is given: Use **3.39** if ``columns`` == 1 else **6.9**
+            - Default: **3.39**
+        
+        *Height:*
+            - ``fig_height`` is given: Use ``fig_height``
+            - ``ratio`` is given: Use **width** x ``ratio`` 
+            - Default: **width** x golden_ratio
     """
     assert(columns in [1,2])
 
@@ -25,8 +39,9 @@ def mpl_latex(fig_width=None, fig_height=None, columns=1):
         fig_width = 3.39 if columns==1 else 6.9 # width in inches
 
     if fig_height is None:
-        golden_mean = (sqrt(5)-1.0)/2.0    # Aesthetic ratio
-        fig_height = fig_width*golden_mean # height in inches
+        if ratio is None:
+            ratio = (sqrt(5)-1.0)/2.0   # Golden ratio
+        fig_height = fig_width*ratio
 
     MAX_HEIGHT_INCHES = 8.0
     if fig_height > MAX_HEIGHT_INCHES:
@@ -39,10 +54,11 @@ def mpl_latex(fig_width=None, fig_height=None, columns=1):
         'backend': 'ps',
         'figure.figsize': [fig_width,fig_height],
         'font.family': 'serif',
-        'font.serif': ['Times', 'Computer Modern Roman'],
+        'font.serif': ['Times New Roman', 'Computer Modern Roman'],
         'font.size': 8,
-        'legend.fontsize': 8,
-        'lines.linewidth': 2,
+        'legend.fontsize': 6,
+        'lines.linewidth': 1,
+        'patch.linewidth': 0,
         'text.latex.preamble': ['\\usepackage{gensymb}'],
         'text.usetex': True,
         'xtick.labelsize': 8,
