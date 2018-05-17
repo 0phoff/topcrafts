@@ -1,5 +1,5 @@
 """
-TOP Crafts: Random bits and bops that are often useful
+TOPCraft: Random bits and bops that are often useful
 """
 import os as _os
 
