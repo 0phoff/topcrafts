@@ -1,7 +1,7 @@
 """LaTeX stuff for publications"""
 import logging
 from math import sqrt
-import matplotlib.pyplot as plt
+import matplotlib
 
 __all__ = ['mpl_latex', 'mpl_latex_axes', 'latex_table']
 log = logging.getLogger(__name__)
@@ -34,18 +34,19 @@ def mpl_latex(fig_width=None, fig_height=None, columns=1):
         fig_height = MAX_HEIGHT_INCHES
 
     params = {
-        'backend': 'ps',
-        'text.latex.preamble': ['\\usepackage{gensymb}'],
         'axes.labelsize': 8,
         'axes.titlesize': 8,
-        'text.fontsize': 8,
-        'legend.fontsize': 8,
-        'xtick.labelsize': 8,
-        'ytick.labelsize': 8,
-        'text.usetex': True,
+        'backend': 'ps',
         'figure.figsize': [fig_width,fig_height],
         'font.family': 'serif',
         'font.serif': ['Times', 'Computer Modern Roman'],
+        'font.size': 8,
+        'legend.fontsize': 8,
+        'lines.linewidth': 2,
+        'text.latex.preamble': ['\\usepackage{gensymb}'],
+        'text.usetex': True,
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
     }
 
     matplotlib.rcParams.update(params)
