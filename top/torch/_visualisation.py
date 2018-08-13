@@ -148,7 +148,7 @@ def get_activations(modules, return_output=True, save_folder=None, grid=False, n
         (tuple): [list of hook_handles], output_dict
 
     Warning:
-        The returned output dict will be empty at first, but will fill only up once you run the network!
+        The returned output dict will be empty at first and will only fill up once you run the network!
 
     Note:
         This function will only save the feature maps of the first item in the batch.
