@@ -30,6 +30,7 @@ requirements = [
     'numpy',
     'scipy',
     'matplotlib',
+    'tqdm',
 ]
 pillow_req = 'pillow-simd' if get_dist('pillow-simd') is not None else 'pillow'
 requirements.append(pillow_req)

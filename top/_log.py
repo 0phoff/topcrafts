@@ -30,8 +30,7 @@ class TOPFormatter(logging.Formatter):
         self.color_codes = {
             'CRITICAL': ColorCode.RED,
             'ERROR': ColorCode.RED,
-            'TRAIN': ColorCode.WHITE,
-            'TEST': ColorCode.WHITE,
+            'PROFILE': ColorCode.BLUE,
             'DEPRECATED': ColorCode.YELLOW,
             'WARNING': ColorCode.YELLOW,
             'INFO': ColorCode.WHITE,
@@ -88,10 +87,14 @@ def deprecated(self, message, *args, **kwargs):
         self.deprecated_msgs.append(message)
         self._log(35, message, args, **kwargs)
 
+def profile(self, message, *args, **kwargs):
+    if self.isEnabledFor(36):
+        self._log(36, message, args, **kwargs)
 
 logging.addLevelName(35, 'DEPRECATED')
 logging.Logger.deprecated = deprecated
-
+logging.addLevelName(36, 'PROFILE')
+logging.Logger.profile = profile
 
 # Console Handler
 ch = logging.StreamHandler()

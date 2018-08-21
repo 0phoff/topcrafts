@@ -9,12 +9,14 @@ import os as _os
 
 # Base imports
 from .util import *
+from .prof import *
 from ._log import *
 
 # Metadata
 _dir = _os.path.dirname(_os.path.realpath(__file__))
 modules = {
     'top.logger': get_module_docstring(_dir + '/_log.py'),
+    'top.prof': get_module_docstring(_dir + '/prof/__init__.py'),
     'top.util': get_module_docstring(_dir + '/util/__init__.py'),
     'top.pd': get_module_docstring(_dir + '/pd/__init__.py'),
     'top.torch': get_module_docstring(_dir + '/torch/__init__.py'),
