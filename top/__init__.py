@@ -8,6 +8,7 @@ Submodules:
 import os as _os
 
 # Base imports
+from ._version import __version__
 from .util import *
 from .prof import *
 from ._log import *

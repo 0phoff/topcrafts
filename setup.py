@@ -20,7 +20,10 @@ def create_version():
 
     with open(os.path.join(cwd, 'VERSION'), 'r') as f:
         version = f.read().splitlines()[0]
-    with open(os.path.join(cwd, 'top', 'version.py'), 'w') as f:
+    with open(os.path.join(cwd, 'top', '_version.py'), 'w') as f:
+        f.write('#\n')
+        f.write('#   Topcraft version: Automatically generated version file\n')
+        f.write('#\n\n')
         f.write(f'__version__ = \'{version}\'')
 
     return version

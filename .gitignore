@@ -5,3 +5,5 @@ top.egg-info
 __pycache__
 .idea/
 *.html
+
+_version.py
