@@ -22,10 +22,11 @@ class ColorCode(Enum):
     GRAY = '\033[1;30m'
 
 
-class ColoredFormatter(logging.Formatter):
-    def __init__(self, msg, color=True, **kwargs):
+class TOPFormatter(logging.Formatter):
+    def __init__(self, msg, color=True, short_name=True, **kwargs):
         logging.Formatter.__init__(self, msg, **kwargs)
         self.color = color
+        self.short_name = short_name
         self.color_codes = {
             'CRITICAL': ColorCode.RED,
             'ERROR': ColorCode.RED,
@@ -41,11 +42,23 @@ class ColoredFormatter(logging.Formatter):
         record = copy.copy(record)
         levelname = record.levelname
         name = record.name
+
+        if self.short_name:
+            if name.startswith('top'):
+                name = '[' + '.'.join(name.split('.')[:2]) + ']'
+            elif name == 'root':
+                name = ''
+        else:
+            name = '[' + name + ']'
+
         if self.color:
             color = self.color_codes[levelname] if levelname in self.color_codes else ''
             record.levelname = f'{ColorCode.BOLD.value}{color.value}{levelname:10}{ColorCode.RESET.value}'
+            record.name = f'{ColorCode.GRAY.value}{name}{ColorCode.RESET.value}'
         else:
             record.levelname = f'{levelname:10}'
+            record.name = f'{name}'
+
         return logging.Formatter.format(self, record)
 
     def setColor(self, value):
@@ -60,7 +73,7 @@ class LevelFilter(logging.Filter):
         self.levels = levels
 
     def filter(self, record):
-        if record.levelname in self.levels:
+        if self.levels is None or record.levelname in self.levels:
             return True
         else:
             return False
@@ -82,28 +95,28 @@ logging.Logger.deprecated = deprecated
 
 # Console Handler
 ch = logging.StreamHandler()
-ch.setFormatter(ColoredFormatter('{levelname} {message}', style='{'))
+ch.setFormatter(TOPFormatter('{levelname} {name} {message}', style='{'))
 if 'TOP_LOGLVL' in os.environ:
     ch.setLevel(os.environ['TOP_LOGLVL'])
     if os.environ['TOP_LOGLVL'] == 'DEBUG':
-        ch.setFormatter(ColoredFormatter('{levelname} [{name}] {message}', style='{'))
+        ch.formatter.short_name = False
 else:
     ch.setLevel(logging.INFO)
 
 
 # File Handler
-def createFileHandler(self, filename, levels, filemode='a'):
+def createFileHandler(self, filename, levels=None, filemode='a'):
     """ Create a file to write log messages of certaing levels """
     fh = logging.FileHandler(filename=filename, mode=filemode)
     fh.setLevel(logging.NOTSET)
     fh.addFilter(LevelFilter(levels))
-    fh.setFormatter(logging.Formatter('{levelname}  {message}', style='{'))
+    fh.setFormatter(logging.Formatter('{levelname} [{name}] {message}', style='{'))
     logger.addHandler(fh)
     return fh
 
 
 # Logger
-logger = logging.getLogger('top')
+logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 logger.addHandler(ch)
 logger.setConsoleLevel = ch.setLevel
